@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+   # auth-server:
+   #    image: gazgeek/springboot-helloworld
+   #    networks:
+   #       - internals
+   #    ports:
+   #       - "8080:8080"
+   #    environment:
+   #       - PG_HOST=postgres
+   #    depends_on:
+   #       postgres:
+   #          condition: service_started
+   postgres:
+      image: postgres:14.1-alpine
+      restart: always
+      environment:
+         - POSTGRES_USER=root
+         - POSTGRES_PASSWORD=root
+      ports:
+         # Standard port for PostgreSQL databases
+         - "5432:5432"
+      volumes:
+         - pgsql:/var/lib/postgresql/data
+         - ./ops/db-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql:rw
+      networks:
+         - internals
+         
+networks:
+   internals: {}
+volumes:
+   pgsql:
